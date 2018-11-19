@@ -9,7 +9,7 @@ public class MyFontProviderConent {
 
     private String fontName;
 
-    private String FONTPATH = this.getClass().getResource("/").toString()+"static\\font\\";
+    private String FONTPATH = this.getClass().getResource("/").toString()+"static/font/";
 
     public static MyFontProviderConent init(String fontName){
         MyFontProviderConent myFontProviderConent = new MyFontProviderConent();

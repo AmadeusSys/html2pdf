@@ -15,11 +15,11 @@ import com.itextpdf.tool.xml.pipeline.css.CssResolverPipeline;
 import com.itextpdf.tool.xml.pipeline.end.PdfWriterPipeline;
 import com.itextpdf.tool.xml.pipeline.html.HtmlPipeline;
 import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
-import com.xiangmaikeji.component.itext.fontProvider.MyFontsProvider;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import html2pdf.html2pdf.itext.fontProvider.MyFontsProvider;
 import org.jsoup.Jsoup;
 
 import java.io.*;
@@ -123,7 +123,7 @@ public class YtPDFComponent {
 
     }
 
-    public void ytSringToPDFStream(String templateString, OutputStream outputStream, Map data) throws DocumentException {
+    public void ytStringToPDFStream(String templateString, OutputStream outputStream, Map data) throws DocumentException {
 
         byte[] newPdfBate = null;
 

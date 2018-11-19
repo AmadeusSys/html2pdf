@@ -3,7 +3,7 @@ package html2pdf.html2pdf.itext.fontProvider;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.tool.xml.XMLWorkerFontProvider;
-import com.xiangmaikeji.component.itext.fontProvider.font.MySimkaiFont;
+import html2pdf.html2pdf.itext.fontProvider.font.MySimkaiFont;
 
 public class MyFontsProvider extends XMLWorkerFontProvider{
 

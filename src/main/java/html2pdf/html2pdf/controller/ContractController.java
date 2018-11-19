@@ -28,14 +28,21 @@ import com.itextpdf.text.DocumentException;
 import html2pdf.html2pdf.itext.YtPDFComponent;
 import html2pdf.html2pdf.itext.YtPDFWorkStreamInterface;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,7 +55,7 @@ import java.util.Map;
 public class ContractController{
 
 
-    private YtPDFWorkStreamInterface getWorkStraem (HttpServletResponse response){
+    private YtPDFWorkStreamInterface getWorkStream (HttpServletResponse response){
 
        return new YtPDFWorkStreamInterface() {
             @Override
@@ -77,11 +84,11 @@ public class ContractController{
 
 
     @RequestMapping(value="/downloading")
-    public void downloading(HttpServletResponse response, String pdfData) throws IOException, DocumentException {
+    public void downloading(HttpServletResponse response, String firstParty, String secondParty) throws IOException, DocumentException {
 
-        YtPDFComponent ytPDFComponent = new YtPDFComponent(this.getWorkStraem(response));
+        YtPDFComponent ytPDFComponent = new YtPDFComponent(this.getWorkStream(response));
 
-        Map map = this.getMap("11");
+        Map map = this.getMap(firstParty, secondParty);
 
         String fileName = "attachment; filename=\"" + "测试" + ".pdf\"";
 
@@ -93,31 +100,54 @@ public class ContractController{
 
         response.setCharacterEncoding("UTF-8");
 
-        String aa = StringEscapeUtils.unescapeHtml4(pdfData);
+        String aa = StringEscapeUtils.unescapeHtml4(this.getDocument());
 
-        ytPDFComponent.ytSringToPDFStream(aa,response.getOutputStream(),map);
+        ytPDFComponent.ytStringToPDFStream(aa,response.getOutputStream(),map);
 
     }
 
     @RequestMapping(value = "/previewCodePdf")
-    public void previewCodePdf(HttpServletResponse response, String pdfData) throws IOException, DocumentException {
+    public void previewCodePdf(HttpServletResponse response, String firstParty, String secondParty) throws IOException, DocumentException {
 
-        YtPDFComponent ytPDFComponent = new YtPDFComponent(this.getWorkStraem(response));
+        YtPDFComponent ytPDFComponent = new YtPDFComponent(this.getWorkStream(response));
 
-        Map map = this.getMap("后台的数据Id");
+        Map map = this.getMap(firstParty, secondParty);
 
-        String aa = StringEscapeUtils.unescapeHtml4(pdfData);
+        String aa = StringEscapeUtils.unescapeHtml4(this.getDocument());
 
-        ytPDFComponent.ytSringToPDFStream(aa,response.getOutputStream(),map);
+        ytPDFComponent.ytStringToPDFStream(aa,response.getOutputStream(),map);
 
     }
 
+    public String getDocument() throws IOException {
 
-    public Map getMap(String id){
+        Resource resource = new ClassPathResource("document/LaborContract.html");
+
+        FileReader reader = new FileReader(resource.getFile());
+
+        BufferedReader bReader = new BufferedReader(reader);
+
+        StringBuilder sb = new StringBuilder();
+
+        String s = "";
+
+        while ((s =bReader.readLine()) != null) {
+            sb.append(s + "\n");
+        }
+        bReader.close();
+        return sb.toString();
+    }
+
+
+    public Map getMap(String firstParty, String secondParty){
 
         Map map = new HashMap();
 
-        map.put("orderId",id);
+        map.put("FirstParty", StringUtils.isNotEmpty(firstParty) ? firstParty : "默认甲方");
+        map.put("SecondParty", StringUtils.isNotEmpty(secondParty) ? secondParty : "默认乙方");
+
+        String dateString = new java.text.SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(new Date());
+        map.put("DateString", dateString);
 
         ArrayList arrayList = new ArrayList();
 

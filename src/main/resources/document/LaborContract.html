@@ -1,0 +1,65 @@
+<p class="p1">
+    <span class="s1"><strong>劳</strong></span><span class="s2"><strong> </strong></span><span class="s1"><strong>动</strong></span><span class="s2"><strong> </strong></span><span class="s1"><strong>合</strong></span><span class="s2"><strong> </strong></span><span class="s1"><strong>同</strong></span><span class="s2"><strong> </strong></span><span class="s1"><strong>书</strong></span>
+</p>
+<p class="p2">
+    <span class="s3"><strong>甲</strong><strong> </strong><strong>方：</strong><strong>&nbsp;</strong></span><span style="text-decoration: underline;"><strong>${FirstParty}</strong></span>
+</p>
+<p class="p3">
+    <span class="s1"><strong>乙</strong><strong> </strong><strong>方：</strong><strong>&nbsp;</strong></span><span style="text-decoration: underline;"><strong>${SecondParty}</strong></span>
+</p>
+<p class="p3">
+    <span class="s1">根据《中华人民共和国劳动法》、《中华人民共和国劳动合同法》和有关法律、法规</span><span class="s4">,</span><span class="s1">甲乙双方经平等自愿、协商一致签订本合同</span><span class="s4">,</span><span class="s1">共同遵守本合同所列条款。</span>
+</p>
+<p class="p3">
+    <span class="s1"></span>
+</p>
+
+列表自动生成
+<table align="center" align="center"  border="1" cellspacing="0" cellpadding="0">
+    <tbody>
+    <tr class="firstRow">
+        <th  width="190">
+            <span style="text-align: -webkit-center;">序号</span>
+        </th>
+        <th  width="190">
+            <span style="text-align: -webkit-center;">类型</span>
+        </th>
+        <th  width="190">
+            <span style="text-align: -webkit-center;">年龄</span>
+        </th>
+        <th  width="190">
+            <span style="text-align: -webkit-center;">名称</span>
+        </th>
+    </tr>
+    <#list listArray as item>
+    <tr>
+        <td width="190" valign="top" align="center">${item.id}</td>
+        <td width="190" valign="top" align="center">${item.type}</td>
+        <td width="190" valign="top" align="center">${item.agre}</td>
+        <td width="190" valign="top" align="center">${item.name}</td>
+    </tr>
+    </#list>
+    </tbody>
+</table>
+<p class="p3">
+    <span class="s1"></span><br/>
+</p>
+<p class="p3">
+    <span class="s1">一、劳动合同双方当事人基本情况</span>
+</p>
+<p class="p3">
+    <span class="s1">第一条</span><span class="s4"> </span><span class="s1">甲方《${FirstParty}》 法定代表人＿＿（主要负责人）或委托代理人＿＿注册地址＿＿经营地址＿＿</span>
+</p>
+<p class="p3">
+    <span class="s1">第二条</span><span class="s4"> </span><span class="s1">乙方《${SecondParty}》 性别＿＿户籍＿＿类型（非农业、农业）</span><span class="s4"> </span><span class="s1">紧急联系人＿＿居民身份证号码＿＿法律文件约定送达地＿＿家庭住址＿＿</span><span class="s4"> </span><span class="s1">邮政编码＿＿在京居住地址＿＿邮政编码＿＿户口所在地＿＿省</span><span class="s4">(</span><span class="s1">市</span><span class="s4">) </span><span class="s1">区</span><span class="s4">(</span><span class="s1">县</span><span class="s4">)</span><span class="s1">＿＿街道</span><span class="s4">(</span><span class="s1">乡镇</span><span class="s4">)</span>
+</p>
+甲乙方自动填充
+<p class="p3">
+    <span class="s1">甲方：${FirstParty}（公章）</span><span class="s5"> </span><span class="s1">乙方：${SecondParty}</span><span class="s5">&nbsp;</span>
+</p>
+<p class="p5">
+    签订日期：${DateString}
+</p>
+<p>
+    <br/>
+</p>
