@@ -33,9 +33,12 @@ import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.security.*;
 import html2pdf.html2pdf.itext.YtPDFComponent;
 import html2pdf.html2pdf.itext.YtPDFWorkStreamInterface;
+import html2pdf.html2pdf.seal.*;
+import html2pdf.html2pdf.seal.configuration.SealCircle;
+import html2pdf.html2pdf.seal.configuration.SealConfiguration;
+import html2pdf.html2pdf.seal.configuration.SealFont;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
@@ -44,12 +47,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.security.KeyStore;
 import java.security.PrivateKey;
-import java.security.Security;
 import java.security.cert.Certificate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author liuzh
@@ -91,7 +101,7 @@ public class ContractController{
                 //四个参数的分别是，图章左下角x，图章左下角y，图章右上角x，图章右上角y
                 appearance.setVisibleSignature(new Rectangle(0, 0, 100, 100), 1, "sig1");
                 //读取图章图片，这个image是itext包的image
-                Image image = Image.getInstance("src/main/resources/document/n.png");
+                Image image = Image.getInstance(asf());
                 appearance.setSignatureGraphic(image);
                 appearance.setCertificationLevel(PdfSignatureAppearance.CERTIFIED_NO_CHANGES_ALLOWED);
                 //设置图章的显示方式，如下选择的是只显示图章（还有其他的模式，可以图章和签名描述一同显示）
@@ -118,6 +128,71 @@ public class ContractController{
 
             }
         };
+    }
+
+    public byte[] asf() throws Exception {
+
+        SealConfiguration configuration = new SealConfiguration();
+
+        /**
+         * 添加主文字
+         */
+        configuration.setMainFont(new SealFont() {{
+            setBold(true);
+            setFontFamily("楷体");
+            setMarginSize(10);
+            setFontText("沈阳享牛逼技有限责任公司");
+            setFontSize(35);
+            setFontSpace(35.0);
+        }});
+        /**
+         * 添加副文字
+         */
+        configuration.setViceFont(new SealFont() {{
+            setBold(true);
+            setFontFamily("宋体");
+            setMarginSize(5);
+            setFontText("123456789012345");
+            setFontSize(13);
+            setFontSpace(12.0);
+        }});
+        /**
+         * 添加中心文字
+         */
+        configuration.setCenterFont(new SealFont() {{
+            setBold(true);
+            setFontFamily("宋体");
+            setFontText("★ ");
+            setFontSize(100);
+            setFontSpace(0.0);
+            setMarginSize(0);
+        }});
+
+        /**
+         * 图片大小
+         */
+        configuration.setImageSize(300);
+        /**
+         * 背景颜色
+         */
+        configuration.setBackgroudColor(Color.RED);
+        /**
+         * 边线粗细、半径
+         */
+        configuration.setBorderCircle(new SealCircle(10, 140, 140));
+        /**
+         * 内边线粗细、半径
+         */
+        configuration.setBorderInnerCircle(new SealCircle(1, 135, 135));
+//        configuration.setBorderInnerCircle(new SealCircle(1, 135, 95));
+        /**
+         * 内环线粗细、半径
+         */
+//        configuration.setInnerCircle(new SealCircle(2, 105, 105));
+
+        BufferedImage bufferedImage = SealUtil.buildSeal(configuration);
+
+        return SealUtil.buildBytes(bufferedImage);
     }
 
     @RequestMapping(value="/editTemplate")
