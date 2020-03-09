@@ -24,12 +24,14 @@
 
 package html2pdf.html2pdf.controller;
 
+import com.itextpdf.awt.geom.Rectangle2D;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfSignatureAppearance;
 import com.itextpdf.text.pdf.PdfStamper;
+import com.itextpdf.text.pdf.parser.PdfReaderContentParser;
 import com.itextpdf.text.pdf.security.*;
 import html2pdf.html2pdf.itext.YtPDFComponent;
 import html2pdf.html2pdf.itext.YtPDFWorkStreamInterface;
@@ -59,6 +61,7 @@ import java.security.cert.Certificate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -99,7 +102,35 @@ public class ContractController{
                 //设置签名的位置，页码，签名域名称，多次追加签名的时候，签名预名称不能一样
                 //签名的位置，是图章相对于pdf页面的位置坐标，原点为pdf页面左下角
                 //四个参数的分别是，图章左下角x，图章左下角y，图章右上角x，图章右上角y
-                appearance.setVisibleSignature(new Rectangle(0, 0, 100, 100), 1, "sig1");
+
+
+                PdfReader pdfReader = new PdfReader(bateArray);
+                //新建一个PDF解析对象
+                PdfReaderContentParser parser = new PdfReaderContentParser(pdfReader);
+                //包含了PDF页面的信息，作为处理的对象
+                PdfStamper pdfStamper = new PdfStamper(pdfReader, new ByteArrayOutputStream());
+                for (int i = 1; i <= pdfReader.getNumberOfPages(); i++) {
+                    //新建一个ImageRenderListener对象，该对象实现了RenderListener接口，作为处理PDF的主要类
+                    TestRenderListener listener = new TestRenderListener();
+                    //解析PDF，并处理里面的文字
+                    parser.processContent(i, listener);
+                    //获取文字的矩形边框
+                    java.util.List<Rectangle2D.Float> rectText = listener.rectText;
+                    java.util.List<String> textList = listener.textList;
+                    java.util.List<Float> listY = listener.listY;
+                    List<Map<String, Rectangle2D.Float>> list_text = listener.rows_text_rect;
+                    for (int k = 0; k < list_text.size(); k++) {
+                        Map<String, Rectangle2D.Float> map = list_text.get(k);
+                        for (Map.Entry<String, Rectangle2D.Float> entry : map.entrySet()) {
+                            System.out.println(entry.getKey() + "---" + entry.getValue());
+                            appearance.setVisibleSignature(new Rectangle(entry.getValue().x - 50, entry.getValue().y-50, entry.getValue().x + 50, entry.getValue().y+50), 1, "sig1");
+                        }
+                    }
+                }
+
+
+
+
                 //读取图章图片，这个image是itext包的image
                 Image image = Image.getInstance(asf());
                 appearance.setSignatureGraphic(image);

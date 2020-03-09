@@ -1,8 +1,12 @@
 package html2pdf.html2pdf.itext;
 
+import com.itextpdf.awt.geom.Rectangle2D;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.parser.PdfReaderContentParser;
 import com.itextpdf.tool.xml.Pipeline;
 import com.itextpdf.tool.xml.XMLWorker;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
@@ -19,10 +23,12 @@ import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import html2pdf.html2pdf.controller.TestRenderListener;
 import html2pdf.html2pdf.itext.fontProvider.MyFontsProvider;
 import org.jsoup.Jsoup;
 
 import java.io.*;
+import java.util.List;
 import java.util.Map;
 
 import static freemarker.template.Configuration.AUTO_DETECT_TAG_SYNTAX;
@@ -129,7 +135,7 @@ public class YtPDFComponent {
 
         try {
 
-            String html = this.ytGetHtmlString(templateString,data);
+            String html = this.ytGetHtmlString(templateString, data);
 
             byte[] pdfBate = this.ytGetPDFStream(html);
 
